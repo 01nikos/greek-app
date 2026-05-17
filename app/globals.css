@@ -1,0 +1,106 @@
+@import url("https://fonts.googleapis.com/css2?family=GFS+Didot&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #0b0f19;
+  color: #f2ede0;
+  font-family: "Manrope", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Safe area for iOS standalone (notch / dynamic island / home indicator) */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Subtle paper grain texture */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(
+      circle at 15% 20%,
+      rgba(61, 122, 173, 0.06) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(194, 114, 74, 0.04) 0%,
+      transparent 50%
+    );
+}
+
+/* Custom selection color */
+::selection {
+  background: #c2724a;
+  color: #0b0f19;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a2235;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #252f47;
+}
+
+/* Flashcard 3D flip */
+.card-perspective {
+  perspective: 1400px;
+}
+.card-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-flipped {
+  transform: rotateY(180deg);
+}
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.card-back {
+  transform: rotateY(180deg);
+}
+
+/* Greek display lettering */
+.greek-mono {
+  font-family: "GFS Didot", "Cormorant Garamond", Georgia, serif;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+/* Hairline separator */
+.hairline {
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(242, 237, 224, 0.18),
+    transparent
+  );
+  height: 1px;
+}
