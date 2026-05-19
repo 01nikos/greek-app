@@ -15,18 +15,18 @@ export type SrsState = Record<string, SrsCard>;
 
 export const BOX_INTERVALS_MS: Record<1 | 2 | 3 | 4 | 5, number> = {
   1: 1 * 24 * 60 * 60 * 1000,
-  2: 2 * 24 * 60 * 60 * 1000,
-  3: 4 * 24 * 60 * 60 * 1000,
-  4: 7 * 24 * 60 * 60 * 1000,
-  5: 14 * 24 * 60 * 60 * 1000,
+  2: 1 * 24 * 60 * 60 * 1000,
+  3: 2 * 24 * 60 * 60 * 1000,
+  4: 4 * 24 * 60 * 60 * 1000,
+  5: 7 * 24 * 60 * 60 * 1000,
 };
 
 export const BOX_LABELS: Record<1 | 2 | 3 | 4 | 5, string> = {
   1: "denně",
-  2: "à 2 dny",
-  3: "à 4 dny",
-  4: "týdně",
-  5: "à 14 dní",
+  2: "denně",
+  3: "à 2 dny",
+  4: "à 4 dny",
+  5: "týdně",
 };
 
 export function initCard(id: string): SrsCard {
@@ -114,6 +114,31 @@ export function saveState(key: string, state: SrsState): void {
 export function resetState(key: string): void {
   if (typeof window === "undefined") return;
   window.localStorage.removeItem(`${NS}:${key}`);
+}
+
+// ===== Next-due helpers =====
+
+export function nextDueAt(
+  state: SrsState,
+  allIds: string[],
+  now = Date.now()
+): number | null {
+  let min = Infinity;
+  for (const id of allIds) {
+    const d = state[id]?.due;
+    if (typeof d === "number" && d > now && d < min) min = d;
+  }
+  return Number.isFinite(min) ? min : null;
+}
+
+export function formatTimeUntil(timestamp: number, now = Date.now()): string {
+  const ms = timestamp - now;
+  if (ms <= 0) return "hned";
+  const hours = Math.ceil(ms / (60 * 60 * 1000));
+  if (hours < 20) return hours <= 1 ? "za chvíli" : `za ${hours} h`;
+  const days = Math.round(ms / (24 * 60 * 60 * 1000));
+  if (days <= 1) return "zítra";
+  return `za ${days} dní`;
 }
 
 // ===== Streak tracking =====

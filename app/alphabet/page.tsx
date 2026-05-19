@@ -11,6 +11,8 @@ import {
   getBoxDistribution,
   resetState,
   recordReview,
+  nextDueAt,
+  formatTimeUntil,
   type SrsState,
 } from "@/lib/srs";
 import FlashCard from "@/components/FlashCard";
@@ -206,7 +208,10 @@ export default function AlphabetPage() {
               hint={`${queue.length} ve frontě`}
             />
           ) : (
-            <EmptyState onReset={handleReset} />
+            <EmptyState
+              onReset={handleReset}
+              nextDue={nextDueAt(srsState, filteredIds)}
+            />
           )}
         </div>
       ) : (
@@ -272,13 +277,21 @@ function FilterBtn({
   );
 }
 
-function EmptyState({ onReset }: { onReset: () => void }) {
+function EmptyState({
+  onReset,
+  nextDue,
+}: {
+  onReset: () => void;
+  nextDue: number | null;
+}) {
   return (
     <div className="text-center py-16 animate-fade-in">
       <div className="greek-mono text-7xl text-olive mb-4">τέλος</div>
       <p className="text-paper-dim mb-2">Žádné karty k opakování.</p>
       <p className="text-sm text-paper-mute">
-        Vrať se zítra, nebo{" "}
+        {nextDue == null
+          ? "Žádné další karty k učení. "
+          : `Vrať se ${formatTimeUntil(nextDue)}, nebo `}
         <button onClick={onReset} className="text-terracotta-light underline">
           resetuj postup
         </button>
